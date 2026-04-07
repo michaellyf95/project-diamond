@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     id: 'root',
     items: [
       { type: 'header', title: 'Login / Register', icon: 'user' },
-      { type: 'link', title: 'Promotions', isRed: true }, // Standard <a> tag
+      { type: 'link', title: 'Promotions', isRed: true },
       {
         type: 'category',
         title: 'Brands',
@@ -90,11 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
       },
       { type: 'spacer' },
 
-      // Utilities - Standard <a> tags
+      // Utilities
       { type: 'utility', title: 'Stores Finder', icon: 'map-pin' },
       { type: 'utility', title: 'Wishlist', icon: 'heart' },
       { type: 'utility', title: 'Compare', icon: 'git-compare' },
-      { type: 'utility', title: 'Contact Us', icon: 'headphones' }
+      { 
+        type: 'utility', 
+        title: 'Contact Us', 
+        id: 'contact-us',
+        icon: 'headphones',
+        children: {
+          title: 'Contact Us',
+          items: [
+            { type: 'link', title: 'General Enquiries' },
+            { type: 'link', title: 'Customer Service' },
+            { type: 'link', title: 'Furniture & Bedding Customer Service' },
+            { type: 'link', title: 'Locate Us' }
+          ]
+        }
+      }
     ]
   };
 
@@ -214,7 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             <img src="${item.img}" alt="${item.title}"> <span>${item.title}</span>
                          </a>`;
       } else if (item.type === 'utility') {
-        html += `<a href="#">${getSvg(item.icon)} <span>${item.title}</span></a>`;
+        // NEW: Check if utility has children to render as a drilldown button
+        if (item.children) {
+          html += `<button onclick="drillDown('${item.id}')" style="justify-content: flex-start; gap: 16px; color: #004378; font-weight: bold;">
+                      ${getSvg(item.icon)} <span>${item.title}</span> <span class="icon-right" style="margin-left:auto">${getSvg('chevron-right')}</span>
+                   </button>`;
+        } else {
+          html += `<a href="#">${getSvg(item.icon)} <span>${item.title}</span></a>`;
+        }
       }
 
       html += `</li>`;
@@ -295,13 +316,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewportHeight = window.innerHeight;
     const availableHeight = `${viewportHeight - headerHeight}px`;
 
-    // Sync Menu Drawer
     navDrawerWrapper.style.top = `${headerHeight}px`;
     navDrawerWrapper.style.height = availableHeight;
     navOverlay.style.top = `${headerHeight}px`;
     navOverlay.style.height = availableHeight;
 
-    // Sync Search Overlay
     searchOverlayWrapper.style.top = `${headerHeight}px`;
     searchOverlayWrapper.style.height = availableHeight;
     searchBackdrop.style.top = `${headerHeight}px`;
@@ -348,10 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isActive) {
       navDrawerWrapper.classList.remove('is-active');
       navOverlay.classList.remove('is-active');
-
-      // Trigger animation back to Hamburger
       menuToggleBtn.classList.remove('is-active');
-
       document.body.style.overflow = '';
 
       setTimeout(() => {
@@ -362,14 +378,11 @@ document.addEventListener('DOMContentLoaded', () => {
       syncLayoutPositions();
       navDrawerWrapper.classList.add('is-active');
       navOverlay.classList.add('is-active');
-
-      // Trigger animation to X
       menuToggleBtn.classList.add('is-active');
-
       document.body.style.overflow = 'hidden';
     }
   };
-  
+
   const openSearch = () => {
     if (navDrawerWrapper.classList.contains('is-active')) {
       navDrawerWrapper.classList.remove('is-active');
@@ -382,9 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSearchResults();
     searchOverlayWrapper.classList.add('is-active');
     searchBackdrop.classList.add('is-active');
-    
-    // NEW: Show the clear button
-    searchClearBtn.classList.add('is-active'); 
+    searchClearBtn.classList.add('is-active');
   };
 
   const closeSearch = () => {
@@ -392,9 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchBackdrop.classList.remove('is-active');
     document.body.style.overflow = '';
     searchInput.blur();
-    
-    // NEW: Hide the clear button
-    searchClearBtn.classList.remove('is-active'); 
+    searchClearBtn.classList.remove('is-active');
   };
 
   // ==========================================
@@ -402,17 +411,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   menuToggleBtn.addEventListener('click', toggleMenu);
   navOverlay.addEventListener('click', toggleMenu);
-
   searchInput.addEventListener('focus', openSearch);
   searchBackdrop.addEventListener('click', closeSearch);
 
-  // NEW: Click event to clear input and close search
   searchClearBtn.addEventListener('click', () => {
-    searchInput.value = ''; // Clears the typed text
-    closeSearch();          // Closes the overlay
+    searchInput.value = '';
+    closeSearch();
   });
 
   window.addEventListener('resize', syncLayoutPositions);
+
+  updateSliderUI();
 
   // ==========================================
   // 9. TYPEWRITER PLACEHOLDER ANIMATION
@@ -421,21 +430,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!searchInput) return;
 
     const text = "What are you looking for?";
-    const typingSpeed = 100; // Time in ms per character (total ~2.5s)
-    const repeatInterval = 5000; // Loop every 5 seconds
+    const typingSpeed = 100;
+    const repeatInterval = 5000;
 
     const type = () => {
-      // Do not animate if user has already typed something
       if (searchInput.value.length > 0) return;
 
       let i = 0;
       searchInput.setAttribute('placeholder', '');
 
       const interval = setInterval(() => {
-        // If user starts typing mid-animation or focuses, stop the animation
         if (document.activeElement === searchInput || searchInput.value.length > 0) {
           clearInterval(interval);
-          searchInput.setAttribute('placeholder', text); // Reset to full text instantly
+          searchInput.setAttribute('placeholder', text);
           return;
         }
 
@@ -448,33 +455,29 @@ document.addEventListener('DOMContentLoaded', () => {
       }, typingSpeed);
     };
 
-    // Start the first loop
     type();
-
-    // Loop every 5 seconds
     setInterval(type, repeatInterval);
   };
 
   initTypewriterPlaceholder();
 });
 
+// Accordion Logic
 document.addEventListener('DOMContentLoaded', () => {
-    const accordionHeaders = document.querySelectorAll('.accordion-header');
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-    accordionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
-            const currentItem = header.parentElement;
-            const isActive = currentItem.classList.contains('is-active');
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const currentItem = header.parentElement;
+      const isActive = currentItem.classList.contains('is-active');
 
-            // Close all items
-            document.querySelectorAll('.accordion-item').forEach(item => {
-                item.classList.remove('is-active');
-            });
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.classList.remove('is-active');
+      });
 
-            // If the clicked item wasn't active, open it
-            if (!isActive) {
-                currentItem.classList.add('is-active');
-            }
-        });
+      if (!isActive) {
+        currentItem.classList.add('is-active');
+      }
     });
+  });
 });

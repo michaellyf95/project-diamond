@@ -181,7 +181,6 @@ a:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
-  /* Top and Height will now be handled by JS */
 }
 .nav-drawer-overlay.is-active {
   opacity: 1;
@@ -231,6 +230,65 @@ a:hover {
   background: #ffffff;
   display: flex;
   flex-direction: column;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel {
+  background-color: #f0f2f5;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) {
+  margin: 16px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li {
+  border-bottom: 1px solid #e0e0e0;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li:last-child {
+  border-bottom: none;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-inner-header {
+  font-size: 15px;
+  font-weight: 800;
+  padding: 16px 20px;
+  border-left: 4px solid #ed1846;
+  color: #000;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-row svg {
+  width: 16px;
+  height: 16px;
+  color: #888;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-row span, .nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li .contact-card .contact-row a {
+  font-size: 14px;
+  color: #444;
+  text-decoration: none;
+  line-height: 1.4;
+}
+.nav-drawer-wrapper .nav-panel.contact-panel .nav-list:not(.utility-links) li a {
+  padding: 16px 20px;
 }
 .nav-drawer-wrapper .nav-panel span {
   font-weight: bold !important;
@@ -332,15 +390,21 @@ a:hover {
   flex-shrink: 0;
   background-color: #eef5f9;
 }
-.nav-drawer-wrapper .nav-panel .utility-links li a {
+.nav-drawer-wrapper .nav-panel .utility-links li a,
+.nav-drawer-wrapper .nav-panel .utility-links li button {
   font-weight: bold;
   color: #004378;
   justify-content: flex-start;
   gap: 16px;
 }
-.nav-drawer-wrapper .nav-panel .utility-links li a svg {
+.nav-drawer-wrapper .nav-panel .utility-links li a svg,
+.nav-drawer-wrapper .nav-panel .utility-links li button svg {
   width: 20px;
   height: 20px;
+}
+.nav-drawer-wrapper .nav-panel .utility-links li a .icon-right,
+.nav-drawer-wrapper .nav-panel .utility-links li button .icon-right {
+  margin-left: auto;
 }
 
 .search-overlay-backdrop {
